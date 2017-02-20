@@ -1,6 +1,6 @@
 {
   "name": "cat-replace",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "replace template",
   "main": "cat.js",
   "scripts": {
