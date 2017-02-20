@@ -1,11 +1,11 @@
-"use strict";
+﻿"use strict";
 
 module.exports = function(grunt){
     var fs = require("fs");
     var configUrl = "static/";
     
 
-    grunt.registerMultiTask('cat-replace', "replace template", function() {
+    grunt.registerMultiTask('cat_replace', "replace template", function() {
         var promise = new Promise(function(resolve, reject){
     fs.readFile(configUrl + "hash.json", function(err, data){
             if(err){
