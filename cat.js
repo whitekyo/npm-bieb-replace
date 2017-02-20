@@ -3,46 +3,15 @@
 module.exports = function(grunt){
     var fs = require("fs");
     var configUrl = "static/";
-    
-
-    grunt.registerMultiTask('cat_replace', "replace template", function() {
-        var promise = new Promise(function(resolve, reject){
-    fs.readFile(configUrl + "hash.json", function(err, data){
-            if(err){
-                reject("读取配置文件失败！");
-            }else{
-                try{
-                    var json_map = JSON.parse(data.toString() || {});
-                    resolve(json_map)
-                }catch(e){
-                    reject("配置文件格式错误！");
-                }
-            }
-        });
-    });
-
-    promise.then(function(config){
-        var readHtmlPromise = new Promise(function(resolve, reject){
-            fs.readFile("index_publish.html", function(err, data){
-                if(err){
-                    reject("读取主页面失败！");
-                }else{
-                    var htmlStr = data.toString();
-                    resolve(changeToPublish(htmlStr, config));
-                }
-            });
-        });
-        readHtmlPromise.then(function(data){
-            fs.writeFile("index.html", data, function(){
-                console.log("写入成功");
-            });
-        }, function(errMsg){
-            console.log(errMsg);
-        });
-
-      }, function(errMsg){
-          console.log(errMsg);
-      });
+    grunt.registerMultiTask('replace', "replace template", function() {
+        try{
+            var hash_file = grunt.file.read(configUrl + "hash.json");
+            var hashMap = JSON.parse(hash_file.toString()) || {};
+            var source_file = grunt.file.read("index_publish.html");
+            grunt.file.write("index.html", changeToPublish(source_file, hashMap));
+        }catch(e){
+            reject("replace出错！");
+        }
     });
 
     function changeToPublish(htmlTemplate, config){
@@ -53,6 +22,7 @@ module.exports = function(grunt){
             var z = l.pop();
             l.push(z + '_' + v);
             l.push(postfix);
+            console.log(l);
             try{
                 if(l[l.length - 1] == "js"){
                     /* 替换js */
@@ -94,13 +64,4 @@ module.exports = function(grunt){
         }
         return htmlTemplate;
     }
-
 };
-
-
-
-
-
-
-
-
