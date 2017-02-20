@@ -1,0 +1,24 @@
+{
+  "name": "cat-replace",
+  "version": "1.0.0",
+  "description": "replace template",
+  "main": "cat.js",
+  "scripts": {
+    "test": "node cat.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/whitekyo/npm-bieb-replace.git"
+  },
+  "keywords": [
+    "node",
+    "replace",
+    "template"
+  ],
+  "author": "whitekyo",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/whitekyo/npm-bieb-replace/issues"
+  },
+  "homepage": "https://github.com/whitekyo/npm-bieb-replace#readme"
+}
