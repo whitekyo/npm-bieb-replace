@@ -2,17 +2,42 @@
 
 module.exports = function(grunt){
     var fs = require("fs");
-    var configUrl = "static/";
+    var configUrl = "./static/";
     grunt.registerMultiTask('replace', "replace template", function() {
         try{
             var hash_file = grunt.file.read(configUrl + "hash.json");
             var hashMap = JSON.parse(hash_file.toString()) || {};
             var source_file = grunt.file.read("index_publish.html");
             grunt.file.write("index.html", changeToPublish(source_file, hashMap));
+            grunt.file.recurse(configUrl, function(abspath, rootdir, subdir, filename){
+                var prefix;
+                var lastfix;
+                var arr = [];
+                var index = filename.indexOf(".js") > 0 ? filename.indexOf(".js") : filename.indexOf(".css");
+                if(index){
+                    prefix = filename.slice(0, index);
+                    arr = prefix.split('_');
+                    if(arr.length > 1 && isDeleteFile(arr[1], hashMap)){
+                        console.log(filename);
+                        grunt.file.delete(configUrl + filename);
+                    }
+                }
+                //console.log(arguments);
+            });
         }catch(e){
             reject("replace出错！");
         }
     });
+
+    function isDeleteFile(target, map){
+        var f = true;
+        for(var i in map){
+            if(target == map[i]){
+                f = false;
+            }
+        }
+        return f;
+    }
 
     function changeToPublish(htmlTemplate, config){
         for(var k in config){
@@ -22,7 +47,6 @@ module.exports = function(grunt){
             var z = l.pop();
             l.push(z + '_' + v);
             l.push(postfix);
-            console.log(l);
             try{
                 if(l[l.length - 1] == "js"){
                     /* 替换js */
